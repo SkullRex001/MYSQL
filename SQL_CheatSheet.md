@@ -842,6 +842,238 @@ CREATE TABLE reviews (
 3. **`ON DELETE CASCADE`** ensures data consistency when related records are removed.
 4. **Avoid incorrect data** by properly designing relationships. For instance, preventing orders from referencing non-existent customers.
 
+
+# Cross Join Example
+
+## Overview
+A **CROSS JOIN** returns the Cartesian product of two tables, meaning every row from the first table is combined with every row from the second table.
+
+## Example
+
+### Consider two tables:
+
+#### `students` Table:
+| id | name  |
+|----|-------|
+| 1  | Alice |
+| 2  | Bob   |
+
+#### `courses` Table:
+| id | course_name  |
+|----|-------------|
+| 1  | Math        |
+| 2  | Science     |
+
+### CROSS JOIN Query:
+```sql
+SELECT students.name, courses.course_name
+FROM students
+CROSS JOIN courses;
+```
+
+### Result:
+| name  | course_name |
+|-------|------------|
+| Alice | Math       |
+| Alice | Science    |
+| Bob   | Math       |
+| Bob   | Science    |
+
+Since we have 2 students and 2 courses, the result has **2 × 2 = 4 rows**.
+
+## Notes
+- CROSS JOIN is useful when you need all possible combinations between two tables.
+- Be cautious when using it on large tables, as the result set grows exponentially.
+
+
+# Inner Join Example
+
+## Overview
+An **INNER JOIN** returns only the rows where there is a match between both tables based on a specified condition.
+
+## Example
+
+### Consider two tables:
+
+#### `students` Table:
+| id | name  |
+|----|-------|
+| 1  | Alice |
+| 2  | Bob   |
+| 3  | Charlie |
+
+#### `enrollments` Table:
+| student_id | course_name  |
+|------------|-------------|
+| 1          | Math        |
+| 2          | Science     |
+| 2          | Math        |
+
+### INNER JOIN Query:
+```sql
+SELECT students.name, enrollments.course_name
+FROM students
+INNER JOIN enrollments ON students.id = enrollments.student_id;
+```
+
+### Result:
+| name  | course_name |
+|-------|------------|
+| Alice | Math       |
+| Bob   | Science    |
+| Bob   | Math       |
+
+Only the students who have enrollments are included in the result.
+
+## Notes
+- INNER JOIN is useful when you only want data that has corresponding matches in both tables.
+- If a student has no enrolled courses, they will not appear in the result.
+
+
+
+# LEFT JOIN in SQL
+
+## Overview
+
+A **LEFT JOIN** (also called a **LEFT OUTER JOIN**) is used in SQL to combine rows from two or more tables based on a related column. The LEFT JOIN returns all rows from the left table (the first table), and the matched rows from the right table (the second table). If there is no match, NULL values are returned for columns of the right table.
+
+### Syntax
+```sql
+SELECT columns
+FROM table1
+LEFT JOIN table2
+ON table1.column = table2.column;
+```
+
+- **table1**: The left table.
+- **table2**: The right table.
+- **column**: The column used for the join condition.
+
+---
+
+## Example
+
+Let's say we have two tables, `students` and `courses`, where each student may have enrolled in a course.
+
+### students Table
+| student_id | student_name |
+|------------|--------------|
+| 1          | Alice        |
+| 2          | Bob          |
+| 3          | Charlie      |
+
+### courses Table
+| course_id | student_id | course_name |
+|-----------|------------|-------------|
+| 101       | 1          | Math        |
+| 102       | 2          | Science     |
+
+### SQL Query
+
+```sql
+SELECT students.student_name, courses.course_name
+FROM students
+LEFT JOIN courses
+ON students.student_id = courses.student_id;
+```
+
+### Result
+
+| student_name | course_name |
+|--------------|-------------|
+| Alice        | Math        |
+| Bob          | Science     |
+| Charlie      | NULL        |
+
+---
+
+## Key Points
+
+- The LEFT JOIN will always return all records from the **left table** (students), even if there is no matching record in the **right table** (courses).
+- When there is no match, NULL values are used for the right table's columns.
+
+---
+
+## Conclusion
+
+The LEFT JOIN is a powerful SQL operation to retrieve all records from one table, even if there is no match in the related table. It helps ensure that you don't lose valuable data from the left table during queries involving relationships between tables.
+
+
+# 🔍 SQL RIGHT JOIN
+
+The `RIGHT JOIN` keyword in SQL is used to return all records from the right table and the matched records from the left table. If there is no match, `NULL` values are returned for columns from the left table.
+
+---
+
+## 🛠️ Syntax
+
+```sql
+SELECT columns
+FROM left_table
+RIGHT JOIN right_table
+ON left_table.column = right_table.column;
+```
+
+---
+
+## 📖 Explanation
+- **`left_table`**: The table on the left side of the `JOIN` clause.
+- **`right_table`**: The table on the right side of the `JOIN` clause.
+- **`ON`**: The condition that specifies how rows from the tables are matched.
+
+---
+
+## 🧠 Visual Representation
+
+Imagine you have two tables: `employees` and `departments`.
+
+### 👥 Employees Table
+| employee_id | employee_name | department_id |
+|--------------|----------------|---------------|
+| 1            | Alice          | 101           |
+| 2            | Bob            | 102           |
+| 3            | Charlie        | NULL          |
+
+### 🏢 Departments Table
+| department_id | department_name |
+|----------------|-----------------|
+| 101            | HR              |
+| 102            | IT              |
+| 103            | Finance         |
+
+---
+
+## 🖥️ Query Example
+
+```sql
+SELECT e.employee_name, d.department_name
+FROM employees e
+RIGHT JOIN departments d
+ON e.department_id = d.department_id;
+```
+
+### 📋 Output
+| employee_name | department_name |
+|----------------|-----------------|
+| Alice         | HR              |
+| Bob           | IT              |
+| NULL          | Finance         |
+
+---
+
+## 🚨 Key Points
+1. **All records from the right table** are included.
+2. Records from the left table are included **only if they have a matching record** in the right table.
+3. If there's no match, **NULL** is returned for the left table's columns.
+
+---
+
+## ⚠️ When to Use RIGHT JOIN
+- When you want **all records from the right table** regardless of matching records in the left table.
+- Useful when the right table contains master or reference data.
+
+
+
 **Happy Querying! 🛠️**
 
 
