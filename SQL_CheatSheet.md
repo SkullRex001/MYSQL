@@ -691,6 +691,159 @@ Removes a constraint from a table.
 ALTER TABLE house DROP CONSTRAINT positive_price;
 ```
 
+# 📖 SQL Relationships and Joins
+
+In relational databases, tables are often related to each other to ensure data consistency and integrity. This document explains different types of relationships in SQL and how to implement them using foreign keys.
+
+---
+
+## 🏛️ Understanding Relationships
+
+Imagine you own a bookstore with tables like `Orders`, `Reviews`, `Authors`, `Versions`, and `Customers`. These tables are interconnected through relationships, which help maintain data consistency.
+
+### 🔗 Types of Relationships
+
+1. **One-to-One (1:1)**
+2. **One-to-Many (1:M)**
+3. **Many-to-Many (M:M)**
+
+**Note:** *Foreign keys* create these relationships by referencing another table's primary key.
+
+---
+
+## 1️⃣ One-to-One Relationship
+
+*Example: A person has only one passport.*
+
+```sql
+CREATE TABLE person (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE passport (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    passport_number VARCHAR(20) UNIQUE NOT NULL,
+    person_id INT UNIQUE,  -- Ensures one person has only one passport
+    FOREIGN KEY (person_id) REFERENCES person(id) ON DELETE CASCADE
+);
+```
+
+### 🔍 Explanation:
+- `person_id` is marked `UNIQUE` to ensure that each person can only have one passport.
+- `ON DELETE CASCADE` ensures that if a person is deleted, their passport record is also removed.
+
+---
+
+## 2️⃣ One-to-Many Relationship
+
+*Example: One customer can place multiple orders.*
+
+```sql
+CREATE TABLE customer (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE orders (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    order_date DATE NOT NULL,
+    customer_id INT,
+    FOREIGN KEY (customer_id) REFERENCES customer(id) ON DELETE CASCADE
+);
+```
+
+### 🔍 Explanation:
+- Each `order` is associated with one `customer`.
+- One `customer` can have many `orders`.
+
+---
+
+## 3️⃣ Many-to-Many Relationship
+
+*Example: Students can enroll in multiple courses, and each course can have multiple students.*
+
+```sql
+CREATE TABLE student (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE course (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    course_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE student_course (
+    student_id INT,
+    course_id INT,
+    PRIMARY KEY (student_id, course_id), -- Composite primary key
+    FOREIGN KEY (student_id) REFERENCES student(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES course(id) ON DELETE CASCADE
+);
+```
+
+### 🔍 Explanation:
+- `student_course` is a **junction table** that connects `student` and `course`.
+- Composite primary key (`student_id`, `course_id`) ensures unique combinations.
+
+**💡 Why use a junction table?**
+- A book can be written by multiple authors, and an author can write multiple books.
+
+---
+
+## ⚠️ The Importance of Relationships
+
+Without proper relationships, databases may contain invalid data. For example:
+- An `order` might reference a `customer` that doesn't exist.
+
+**SQL ensures data integrity** through foreign keys that prevent these anomalies.
+
+---
+
+## 🔍 Deep Dive: Many-to-Many with Series, Reviewers, and Reviews
+
+Let's consider a scenario where a TV series has multiple reviews from different reviewers.
+
+```sql
+CREATE TABLE reviewers (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE series (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(100),
+    released_year YEAR,
+    genre VARCHAR(100)
+);
+
+CREATE TABLE reviews (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    rating DECIMAL(2, 1),
+    series_id INT,
+    reviewer_id INT,
+    FOREIGN KEY (series_id) REFERENCES series(id),
+    FOREIGN KEY (reviewer_id) REFERENCES reviewers(id)
+);
+```
+
+### 🔍 Explanation:
+- Each review is connected to both a `series` and a `reviewer`.
+- This structure avoids redundant data.
+
+---
+
+## 🚨 Final Notes
+
+1. **Use foreign keys** to maintain referential integrity.
+2. **Junction tables** are essential for many-to-many relationships.
+3. **`ON DELETE CASCADE`** ensures data consistency when related records are removed.
+4. **Avoid incorrect data** by properly designing relationships. For instance, preventing orders from referencing non-existent customers.
+
+**Happy Querying! 🛠️**
+
 
 
 ## Notes
