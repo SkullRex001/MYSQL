@@ -578,6 +578,118 @@ SELECT CAST('09:00:00' AS TIME);
 SELECT * FROM people WHERE birthtime BETWEEN CAST('09:00:00' AS TIME) AND CAST('12:00:00' AS TIME);
 ```
 
+# SQL Constraints and ALTER TABLE Commands
+
+## Constraints in SQL
+
+### 1. UNIQUE Constraint
+Ensures that all values in a column are distinct.
+
+```sql
+CREATE TABLE companies(
+    id INT AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    phone VARCHAR(10) NOT NULL UNIQUE,
+    PRIMARY KEY (id)
+);
+```
+
+### 2. CHECK Constraint
+Ensures that a column meets a specific condition.
+
+```sql
+CREATE TABLE driver (
+    name VARCHAR(50),
+    age INT CHECK (age > 18)
+);
+```
+
+#### Naming a CHECK Constraint
+We can provide a custom name for the constraint:
+
+```sql
+CREATE TABLE driver (
+    name VARCHAR(50),
+    age INT,
+    CONSTRAINT age_over_18 CHECK (age > 18)
+);
+```
+
+#### Multi-Column CHECK Constraint
+Ensures that a combination of columns meets a condition.
+
+```sql
+CREATE TABLE houses (
+    purchase_price INT NOT NULL,
+    sale_price INT NOT NULL,
+    CONSTRAINT must_be_profit CHECK(purchase_price < sale_price)
+);
+```
+
+## ALTER TABLE Commands
+
+### 1. ADD COLUMN
+Adds a new column to an existing table.
+
+```sql
+ALTER TABLE <table_name> ADD COLUMN <column_name> <column_definition>;
+```
+
+### 2. DROP COLUMN
+Removes a column from a table.
+
+```sql
+ALTER TABLE <table_name> DROP COLUMN <column_name>;
+```
+
+### 3. RENAME TABLE
+Changes the name of a table.
+
+```sql
+RENAME TABLE <current_name> TO <new_name>;
+```
+
+or
+
+```sql
+ALTER TABLE <current_name> RENAME TO <new_name>;
+```
+
+### 4. RENAME COLUMN
+Changes the name of a column.
+
+```sql
+ALTER TABLE <table_name> RENAME COLUMN <current_name> TO <new_name>;
+```
+
+### 5. MODIFY COLUMN
+Changes the data type or properties of a column.
+
+```sql
+ALTER TABLE <table_name> MODIFY <column_name> <new_definition>;
+```
+
+or
+
+```sql
+ALTER TABLE <table_name> CHANGE <column_name> <new_column_name> <new_definition>;
+```
+
+## ALTER TABLE Constraints
+
+### 1. ADD CONSTRAINT
+Adds a constraint to an existing table.
+
+```sql
+ALTER TABLE house ADD CONSTRAINT positive_price CHECK (purchase_price > 0);
+```
+
+### 2. DROP CONSTRAINT
+Removes a constraint from a table.
+
+```sql
+ALTER TABLE house DROP CONSTRAINT positive_price;
+```
 
 
 
