@@ -449,6 +449,138 @@ SELECT SUBTIME(<time1>, <time2>);
 
 ---
 
+
+
+# SQL Operators and Clauses
+
+This document provides examples of various SQL comparison and logic operators, along with their use cases. The examples are based on SQL queries that perform specific tasks such as filtering data, logical operations, and handling different conditions.
+
+## Comparison and Logic Operators
+
+### 1. NOT EQUALS or (`!=`)
+
+```sql
+-- NOT EQUALS or (!=)
+SELECT title, author FROM books WHERE author_lname != 'Aditya';
+```
+
+### 2. NOT LIKE
+
+```sql
+-- NOT LIKE :-
+SELECT column_name1, column_name2, column_name3 FROM table_name WHERE column_name NOT LIKE '%<string>%';
+```
+
+### 3. GREATER THAN
+
+```sql
+-- GREATER THAN :-
+SELECT * FROM books WHERE released_year > 2000;
+--if needed
+SELECT * FROM books WHERE released_year >= 2000;
+```
+
+### 4. LESS THAN
+
+```sql
+-- LESS THAN :-
+SELECT * FROM books WHERE released_year < 2000;
+--if needed
+SELECT * FROM books WHERE released_year <= 2000;
+```
+
+### 5. AND
+
+```sql
+-- AND :-
+SELECT * FROM books WHERE author_lname = 'Vikram' AND released_year > 2000;
+
+SELECT title, released_year FROM books WHERE released_year >= 2000 AND released_year % 2 = 1;
+```
+
+### 6. OR
+
+```sql
+-- OR :-
+SELECT * FROM books WHERE author_lname = 'Vikram' OR released_year > 2000;
+```
+
+### 7. BETWEEN
+
+```sql
+-- BETWEEN :-
+SELECT title, released_year FROM boos WHERE released_year BETWEEN 2004 AND 2015;
+--or
+SELECT title, released_year FROM boos WHERE released_year >= 2004 AND released_year <= 2015;
+```
+
+### 8. NOT BETWEEN
+
+```sql
+-- NOT BETWEEN :-
+SELECT title, released_year FROM boos WHERE released_year NOT BETWEEN 2004 AND 2015;
+--or
+SELECT title, released_year FROM boos WHERE released_year < 2004 AND released_year > 2015;
+```
+
+### 9. IN
+
+```sql
+-- IN :-
+SELECT * FROM books WHERE author_lname IN('ADITYA', 'HARSH', 'PREM', 'BABAN');
+--or
+SELECT * FROM books WHERE author_lname = 'ADITYA' OR author_lname = 'HARSH' OR author_lname = 'PREM' OR author_lname = 'BABAN';
+```
+
+### 10. NOT IN
+
+```sql
+-- NOT IN :-
+SELECT * FROM books WHERE author_lname NOT IN('ADITYA', 'HARSH', 'PREM', 'BABAN');
+```
+
+### 11. CASE STATEMENTS
+
+```sql
+-- CASE STATEMENTS :-
+-- eg: If books rating is > 4 => Good Book, If books rating is < 4 & >3 => Decent Book, If books rating is < 3 => Poor Book
+
+SELECT title, author_lname,
+    CASE
+        WHEN ratings BETWEEN 5 AND 4 THEN 'Good Book'
+        WHEN ratings BETWEEN 4 AND 3 THEN 'Decent Book'
+        ELSE 'Poor book'
+    END
+    AS 'about book'
+FROM books;
+```
+
+### 12. IS NULL
+
+```sql
+-- IS NULL
+SELECT * FROM books WHERE author_lname IS NULL;
+```
+
+### 13. IS NOT NULL
+
+```sql
+-- IS NOT NULL
+SELECT * FROM books WHERE author_lname IS NOT NULL;
+```
+
+### 14. CAST
+
+```sql
+-- CAST :-
+SELECT CAST('09:00:00' AS TIME);
+--Note :- Use this when comparing Date or Time
+SELECT * FROM people WHERE birthtime BETWEEN CAST('09:00:00' AS TIME) AND CAST('12:00:00' AS TIME);
+```
+
+
+
+
 ## Notes
 - The SQL commands written above are important for working with different data types and date/time operations.
 - Understanding these concepts ensures better data management and query optimization.
