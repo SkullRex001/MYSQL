@@ -336,4 +336,122 @@ source file_name.sql;
 
 ---
 
+
+# SQL Data Types and Date/Time Functions
+
+## Data Types
+
+### 1. CHAR
+- Fixed-length string.
+- If the stored value is shorter than the defined length, padding is added.
+- Padding is removed when retrieved.
+
+### 2. Numeric Data Types
+- **TINYINT / SMALLINT / MEDIUMINT / INT / BIGINT**: Varying ranges of integers.
+- **Unsigned Variants**: Adding `UNSIGNED` increases the range of positive numbers.
+
+### 3. DECIMAL
+- Format: `DECIMAL(total_digits, digits_after_decimal)`
+- Example: `DECIMAL(5, 2) → 999.99`
+- Lower range but higher accuracy.
+
+### 4. Floating Point Types
+- **FLOAT**: 4 bytes, precision issues after 7 decimal places.
+- **DOUBLE**: 8 bytes, precision issues after 15 decimal places.
+
+### 5. Date & Time Data Types
+- **DATE**: Stored in `YYYY-MM-DD` format.
+- **TIME**: Stored in `HH:MM:SS` format. Can also represent durations.
+- **DATETIME**: Stored in `YYYY-MM-DD HH:MM:SS` format.
+- **TIMESTAMP**:
+  - Similar to `DATETIME` but takes less storage.
+  - Has a smaller range than `DATETIME`.
+
+#### Example Table:
+```sql
+CREATE TABLE user (
+    name VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    profile_updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+```
+
+---
+
+## Date/Time Functions
+
+### Retrieving Current Date & Time
+```sql
+SELECT CURTIME();       -- Current time
+SELECT CURDATE();       -- Current date
+SELECT NOW();           -- Current date & time
+SELECT CURRENT_TIMESTAMP(); -- Alias for NOW()
+```
+
+### Extracting Components
+```sql
+SELECT DAYOFMONTH(<date/date_time>); -- Day of the month
+SELECT DAYOFWEEK(<date/date_time>);  -- Sunday = 1, Monday = 2, ..., Saturday = 7
+SELECT DAYOFYEAR(<date/date_time>);  -- Number of days passed in the year
+SELECT MONTHNAME(<date/date_time>);  -- Returns month name (e.g., 'January')
+SELECT DATE(<date_time>);            -- Extracts date from datetime
+SELECT TIME(<date_time>);            -- Extracts time from datetime
+SELECT YEAR(<date/date_time>);
+SELECT HOUR(<time/date_time>);
+SELECT MINUTE(<time/date_time>);
+SELECT SECOND(<time/date_time>);
+```
+
+### Formatting Dates
+```sql
+SELECT DATE_FORMAT(date_time, '<format_string>');
+```
+#### Format Examples:
+- `%a` → Abbreviated weekday name (Sun, Mon...)
+- `%b` → Abbreviated month name (Jan, Feb...)
+- `%c` → Month number (0-12)
+- `%r` → 12-hour format time
+
+Example:
+```sql
+SELECT DATE_FORMAT(NOW(), '%a %b %d, %Y %r'); -- Outputs: Mon Jan 01, 2025 10:30:45 PM
+```
+
+---
+
+## Date Math
+
+### Difference Between Dates
+```sql
+SELECT DATEDIFF(<expr1>, <expr2>);
+```
+
+### Adding and Subtracting Intervals
+```sql
+SELECT DATE_ADD(<date>, INTERVAL <value> <unit>);
+SELECT DATE_SUB(<date>, INTERVAL <value> <unit>);
+```
+#### Examples:
+```sql
+SELECT DATE_ADD('2018-06-01', INTERVAL 1 DAY);    -- 2018-06-02
+SELECT DATE_ADD('2018-06-01 23:56:26', INTERVAL 1 SECOND); -- 2018-06-01 23:56:27
+SELECT DATE_SUB('2018-06-01', INTERVAL 1 DAY);    -- 2018-05-31
+SELECT DATE_SUB('2018-06-01 23:56:26', INTERVAL 1 HOUR); -- 2018-06-01 22:56:26
+```
+
+---
+
+## Time Math
+```sql
+SELECT ADDTIME(<time1>, <time2>);
+SELECT SUBTIME(<time1>, <time2>);
+```
+
+---
+
+## Notes
+- The SQL commands written above are important for working with different data types and date/time operations.
+- Understanding these concepts ensures better data management and query optimization.
+
+
 ### 🚀 This cheat sheet covers fundamental SQL operations for databases, tables, queries, and functions. Happy querying! 🎯
